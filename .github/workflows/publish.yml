@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Build frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Publish to GitHub pages
+        run: |
+          git clone https://fuglede:$TOKEN@github.com/fuglede/swapple.git --branch gh-pages --single-branch gh-pages
+          cd gh-pages
+          git rm *
+          cp dist/* .
+          touch .nojekyll
+          git config --local user.email "github@fuglede.dk"
+          git config --local user.name "Søren Fuglede Jørgensen"
+          git add .
+          git commit -m "Publish static files" --amend
+          git push -f
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
