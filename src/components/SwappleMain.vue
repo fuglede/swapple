@@ -1,11 +1,22 @@
 <template>
-  <!-- show daily date -->
-  <h1>SWAPPLE {{ date }} daily</h1>
-  <div>
-    <h3>Moves: {{ counter }}</h3>
-    <h3 v-if="hasWon" style="margin-top: 5px;">YOU WON!</h3>
-    <h4 v-if="hasWon && counter != 5">But you can actually do it in fewer moves. Can you find a solution with fewer moves?</h4>
-    <h4 v-if="hasWon && counter == 5">And that's even the shortest number of possible moves!</h4>
+  <div class="game-container">
+    <header>
+      <h1>SWAPPLE</h1>
+      <div class="date-label">{{ date }}</div>
+    </header>
+
+    <div class="stats-container">
+      <div class="stat-box">
+        <span class="stat-number">{{ counter }}</span>
+        <span class="stat-label">Moves</span>
+      </div>
+      <div v-if="hasWon" class="message success">
+        <strong>YOU WON!</strong>
+        <span v-if="counter > optimal" class="hint">Can you solve it in {{ optimal }} moves?</span>
+        <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
+      </div>
+    </div>
+
     <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
       <template v-for="(row, rowIndex) in state" :key="rowIndex">
         <div :style="{'grid-column': 1, 'grid-row': rowIndex + 1}">
@@ -25,24 +36,24 @@
         </div>
       </template>
     </div>
-  </div>
 
-  <div>
-    <h3>Target</h3>
-    <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
-      <template v-for="(row, rowIndex) in target" :key="rowIndex">
-        <template v-for="(col, colIndex) in row" :key="colIndex">
-          <div style="background-color: #eeeeee;" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
-            <div style="padding: 20%" :style="[col ? {backgroundColor: 'hsl(0, 100%, 90%)'} : {backgroundColor: 'white'}]"></div>
-          </div>
+    <div>
+      <h3>Target</h3>
+      <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
+        <template v-for="(row, rowIndex) in target" :key="rowIndex">
+          <template v-for="(col, colIndex) in row" :key="colIndex">
+            <div style="background-color: #eeeeee;" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
+              <div style="padding: 20%" :style="[col ? {backgroundColor: 'hsl(0, 100%, 90%)'} : {backgroundColor: 'white'}]"></div>
+            </div>
+          </template>
         </template>
-      </template>
+      </div>
     </div>
-  </div>
 
-  <div style="display: float">
-    <button class="actionbutton" @click="undo">Undo</button>
-    <button class="actionbutton" @click="reset">Reset</button>
+    <div class="button-container">
+      <button class="actionbutton" @click="undo">Undo</button>
+      <button class="actionbutton" @click="reset">Reset</button>
+    </div>
   </div>
 </template>
 
@@ -173,47 +184,128 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.game-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  border-bottom: 1px solid #d3d6da;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
 h1 {
+  font-size: 36px;
   font-weight: 700;
-  margin-bottom: 3%;
-}
-h2 { 
   margin: 0;
+  letter-spacing: 0.2rem;
 }
-h3 {
-  margin: 3% 0 0;
+
+.date-label {
+  color: #787c7e;
+  font-size: 14px;
+  margin-top: 4px;
 }
+
+.stats-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  gap: 24px;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f3f3f3;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #202020;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #787c7e;
+  text-transform: uppercase;
+}
+
+.message {
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.success {
+  background: #c9f7c9;
+  color: #1a651a;
+}
+
+.hint {
+  display: block;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.perfect {
+  display: block;
+  font-size: 14px;
+  margin-top: 4px;
+  color: #1a651a;
+  font-weight: bold;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
 .fieldcontainer {
   display: grid;
   row-gap: 0px;
   width: 300px;
-  margin-top: 1%;
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 16px auto;
   text-align: center;
 }
+
 .fieldcontainer div {
   aspect-ratio: 1;
-  transition-duration: 400ms;
+  transition-duration: 200ms;
   background-clip: content-box;
 }
+
 .fieldcontainer button {
-  margin-top: 20%;
-  margin-bottom: 20%;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin: 20%;
   height: 60%;
   width: 60%;
+  background: hsl(240, 100%, 90%);
+  color: #555555;
+  border: none;
+  font-weight: bold;
 }
+
 .actionbutton {
-  height: 30px;
-  width: 60px;
-  margin-left: 20px;
-  margin-right: 20px;
+  height: 44px;
+  width: 80px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: hsl(240, 100%, 90%);
+  color: #303030;
+  border: none;
 }
+
 button {
   background-color: hsl(240, 100%, 90%);
   border: 0px;
@@ -224,14 +316,21 @@ button {
   padding: 0px;
 }
 
+h3 {
+  margin: 24px 0 8px;
+  color: #202020;
+}
+
 @media(hover:hover) {
   button:hover {
     background-color: hsl(120, 100%, 90%);
     transition-duration: 200ms;
+    opacity: 0.9;
   }
 }
+
 button:active {
-  background-color: hsl(120, 100%, 90%);
-  transition-duration: 200ms;
+  transform: scale(0.9);
+  transition-duration: 50ms;
 }
 </style>
