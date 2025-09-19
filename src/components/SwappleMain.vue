@@ -23,7 +23,7 @@
           <button @click="rowClick(rowIndex)">→</button>
         </div>
         <template v-for="(col, colIndex) in row" :key="colIndex">
-          <div :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
+          <div :class="`cell-${rowIndex}-${colIndex}`" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
             <div :style="[colIndex == activeColumn || rowIndex == activeRow ? {backgroundColor: 'hsl(120, 100%, 90%)'} : {backgroundColor: '#eeeeee'}]">
               <div style="padding: 20%" :style="[col ? {backgroundColor: 'hsl(0, 100%, 90%)'} : {backgroundColor: 'white'}]"></div>
             </div>
@@ -108,6 +108,15 @@ export default {
       if (this.activeRow === null) {
         this.activeRow = index;
       } else {
+        const sourceRow = this.state[this.activeRow];
+        sourceRow.forEach((value, i) => {
+          if (value) {
+            const cell = document.querySelector(`.cell-${index}-${i} > div`);
+            cell.classList.add('cell-updating');
+            setTimeout(() => cell.classList.remove('cell-updating'), 300);
+          }
+        });
+        
         for (let i = 0; i < this.state.length; i++) {
           this.state[index][i] ^= this.state[this.activeRow][i];
         }
@@ -127,7 +136,14 @@ export default {
       if (this.activeColumn === null) {
         this.activeColumn = index;
       } else {
-        console.log("boo")
+        for (let i = 0; i < this.state.length; i++) {
+          if (this.state[i][this.activeColumn]) {
+            const cell = document.querySelector(`.cell-${i}-${index} > div`);
+            cell.classList.add('cell-updating');
+            setTimeout(() => cell.classList.remove('cell-updating'), 300);
+          }
+        }
+        
         for (let i = 0; i < this.state.length; i++) {
           this.state[i][index] ^= this.state[i][this.activeColumn];
         }
@@ -282,8 +298,22 @@ h1 {
 
 .fieldcontainer div {
   aspect-ratio: 1;
-  transition-duration: 200ms;
+  transition: all 0.3s ease;
   background-clip: content-box;
+}
+
+.fieldcontainer div > div {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cell-updating {
+  animation: update-flash 0.3s ease;
+}
+
+@keyframes update-flash {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 .fieldcontainer button {
