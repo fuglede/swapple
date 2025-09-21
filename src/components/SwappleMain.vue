@@ -53,10 +53,10 @@
           <p>When moving a white cell, the target cell does not change. If you move a red cell into a white cell it becomes red. If you move a red cell into a red cell it becomes white!</p>
           <p>In other “words”,</p>
           <ul>
-            <li>⬜ + ⬜ = ⬜</li>
-            <li>⬜ + 🟥 = 🟥</li>
-            <li>🟥 + ⬜ = 🟥</li>
-            <li>🟥 + 🟥 = ⬜</li>
+            <li><span class="white-cell"></span> + <span class="white-cell"></span> = <span class="white-cell"></span></li>
+            <li><span class="white-cell"></span> + <span class="red-cell"></span> = <span class="red-cell"></span></li>
+            <li><span class="red-cell"></span> + <span class="white-cell"></span> = <span class="red-cell"></span></li>
+            <li><span class="red-cell"></span> + <span class="red-cell"></span> = <span class="white-cell"></span></li>
           </ul>
 
           Try to reach the target pattern in as few moves as possible!
@@ -543,5 +543,22 @@ button:active {
 
 .rules-content li {
   margin-bottom: 8px;
+}
+
+.white-cell, .red-cell {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 4px;
+}
+
+.white-cell {
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.red-cell {
+  background-color: hsl(0, 100%, 90%);
+  border: 1px solid hsl(0, 100%, 80%);
 }
 </style>
