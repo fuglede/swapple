@@ -12,8 +12,22 @@
       </div>
       <div v-if="hasWon" class="message success">
         <strong>YOU WON!</strong>
-        <span v-if="counter > optimal" class="hint">Can you solve it in {{ optimal }} moves?</span>
+        <span v-if="counter > optimal" class="hint">Can you find a solution<br/>with fewer moves?</span>
         <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
+      </div>
+      <div class="button-container">
+        <button class="actionbutton" @click="undo" title="Undo last move" aria-label="Undo last move">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+          </svg>
+          <span class="button-label">Undo</span>
+        </button>
+        <button class="actionbutton" @click="reset" title="Reset puzzle" aria-label="Reset puzzle">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          <span class="button-label">Reset</span>
+        </button>
       </div>
     </div>
 
@@ -48,21 +62,6 @@
           </template>
         </template>
       </div>
-    </div>
-
-    <div class="button-container">
-      <button class="actionbutton" @click="undo" title="Undo last move" aria-label="Undo last move">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-          <path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
-        </svg>
-        <span class="button-label">Undo</span>
-      </button>
-      <button class="actionbutton" @click="reset" title="Reset puzzle" aria-label="Reset puzzle">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-          <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-        <span class="button-label">Reset</span>
-      </button>
     </div>
   </div>
 </template>
@@ -243,6 +242,7 @@ h1 {
   justify-content: center;
   margin-bottom: 24px;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .stat-box {
@@ -293,9 +293,7 @@ h1 {
 
 .button-container {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 24px;
+  gap: 8px;
 }
 
 .fieldcontainer {
