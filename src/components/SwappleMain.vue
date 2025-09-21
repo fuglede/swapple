@@ -51,8 +51,18 @@
     </div>
 
     <div class="button-container">
-      <button class="actionbutton" @click="undo">Undo</button>
-      <button class="actionbutton" @click="reset">Reset</button>
+      <button class="actionbutton" @click="undo" title="Undo last move" aria-label="Undo last move">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
+        </svg>
+        <span class="button-label">Undo</span>
+      </button>
+      <button class="actionbutton" @click="reset" title="Reset puzzle" aria-label="Reset puzzle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+        <span class="button-label">Reset</span>
+      </button>
     </div>
   </div>
 </template>
@@ -327,13 +337,20 @@ h1 {
 }
 
 .actionbutton {
-  height: 44px;
-  width: 80px;
-  font-weight: bold;
-  text-transform: uppercase;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: hsl(240, 100%, 90%);
   color: #303030;
   border: none;
+  gap: 2px;
+}
+
+.button-label {
+  font-size: 12px;
 }
 
 button {
