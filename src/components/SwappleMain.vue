@@ -41,7 +41,11 @@
     <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
       <template v-for="(row, rowIndex) in state" :key="rowIndex">
         <div :style="{'grid-column': 1, 'grid-row': rowIndex + 1}">
-          <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">→</button>
+          <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">
+            <span v-if="activeRow === rowIndex">×</span>
+            <span v-else-if="activeRow !== null">⊕</span>
+            <span v-else>→</span>
+          </button>
         </div>
         <template v-for="(col, colIndex) in row" :key="colIndex">
           <div :class="`cell-${rowIndex}-${colIndex}`" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
@@ -53,7 +57,11 @@
       </template>
       <template v-for="(col2, index) in state[0]" :key="index">
         <div :style="{'grid-column': index + 2, 'grid-row': state.length + 1 }">
-          <button @click="columnClick(index)" :disabled="activeRow !== null">↑</button>
+          <button @click="columnClick(index)" :disabled="activeRow !== null">
+            <span v-if="activeColumn === index">×</span>
+            <span v-else-if="activeColumn !== null">⊕</span>
+            <span v-else>↑</span>
+          </button>
         </div>
       </template>
     </div>
