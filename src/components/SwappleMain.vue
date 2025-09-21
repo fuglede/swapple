@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     copyResults() {
-      navigator.clipboard.writeText(`Swapple ${this.date}\n\nSolved in ${this.counter} moves!\n\nhttps://fuglede.github.io/swapple/`);
+      navigator.clipboard.writeText(`Swapple ${this.date}\n\nSolved in ${this.counter} moves!\n\nhttps://swapple.fuglede.dk/`);
       const button = event.target;
       button.textContent = "Result copied to clipboard!";
       setTimeout(() => {
