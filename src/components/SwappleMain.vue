@@ -20,7 +20,7 @@
     <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
       <template v-for="(row, rowIndex) in state" :key="rowIndex">
         <div :style="{'grid-column': 1, 'grid-row': rowIndex + 1}">
-          <button @click="rowClick(rowIndex)">→</button>
+          <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">→</button>
         </div>
         <template v-for="(col, colIndex) in row" :key="colIndex">
           <div :class="`cell-${rowIndex}-${colIndex}`" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
@@ -32,7 +32,7 @@
       </template>
       <template v-for="(col2, index) in state[0]" :key="index">
         <div :style="{'grid-column': index + 2, 'grid-row': state.length + 1 }">
-          <button @click="columnClick(index)">↑</button>
+          <button @click="columnClick(index)" :disabled="activeRow !== null">↑</button>
         </div>
       </template>
     </div>
@@ -344,6 +344,20 @@ button {
   border-radius: 2px;
   align-items: center;
   padding: 0px;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: hsl(240, 100%, 90%);
+  opacity: 0.7;
+}
+
+button:disabled:active {
+  transform: none;
 }
 
 h3 {
