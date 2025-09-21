@@ -143,15 +143,6 @@ export default {
       if (this.activeRow === null) {
         this.activeRow = index;
       } else {
-        const sourceRow = this.state[this.activeRow];
-        sourceRow.forEach((value, i) => {
-          if (value) {
-            const cell = document.querySelector(`.cell-${index}-${i} > div`);
-            cell.classList.add('cell-updating');
-            setTimeout(() => cell.classList.remove('cell-updating'), 300);
-          }
-        });
-        
         for (let i = 0; i < this.state.length; i++) {
           this.state[index][i] ^= this.state[this.activeRow][i];
         }
@@ -171,14 +162,6 @@ export default {
       if (this.activeColumn === null) {
         this.activeColumn = index;
       } else {
-        for (let i = 0; i < this.state.length; i++) {
-          if (this.state[i][this.activeColumn]) {
-            const cell = document.querySelector(`.cell-${i}-${index} > div`);
-            cell.classList.add('cell-updating');
-            setTimeout(() => cell.classList.remove('cell-updating'), 300);
-          }
-        }
-        
         for (let i = 0; i < this.state.length; i++) {
           this.state[i][index] ^= this.state[i][this.activeColumn];
         }
@@ -344,17 +327,7 @@ h1 {
 }
 
 .fieldcontainer div > div {
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.cell-updating {
-  animation: update-flash 0.3s ease;
-}
-
-@keyframes update-flash {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  transition: background-color 0.5s ease, transform 0.3s ease;
 }
 
 .fieldcontainer button {
