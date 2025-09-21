@@ -33,6 +33,7 @@
           <strong>YOU WON!</strong>
           <span v-if="counter > optimal" class="hint">There is a solution that uses fewer moves.<br />Can you find it?</span>
           <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
+          <button class="copy-button" @click="copyResults">Share results</button>
         </div>
       </div>
     </div>
@@ -81,6 +82,14 @@ export default {
     msg: String
   },
   methods: {
+    copyResults() {
+      navigator.clipboard.writeText(`Swapple ${this.date}\n\nSolved in ${this.counter} moves!\n\nhttps://fuglede.github.io/swapple/`);
+      const button = event.target;
+      button.textContent = "Result copied to clipboard!";
+      setTimeout(() => {
+        button.textContent = "Copy Results";
+      }, 5000);
+    },
     closeModal() {
       this.hasWon = false;
     },
@@ -270,7 +279,7 @@ h1 {
 }
 
 .stat-label {
-  font-size: 12px;
+  font-size: 14px;
   color: #787c7e;
   text-transform: uppercase;
 }
@@ -278,24 +287,26 @@ h1 {
 .message {
   text-align: center;
   padding: 16px;
+  font-size: 14px;
   border-radius: 8px;
   min-width: 200px;
 }
 
 .success {
   background: #c9f7c9;
+  font-size: 16px;
   color: #1a651a;
 }
 
 .hint {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 4px;
 }
 
 .perfect {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 4px;
   color: #1a651a;
   font-weight: bold;
@@ -421,6 +432,7 @@ button:active {
   padding: 24px;
   border-radius: 24px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
   max-width: 90%;
   animation: modal-appear 0.3s ease;
   position: relative;
@@ -452,5 +464,19 @@ button:active {
 .close-button:hover {
   color: #000;
   background: none;
+}
+
+.copy-button {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background: #45a049;
 }
 </style>
