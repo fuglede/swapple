@@ -183,7 +183,11 @@ export default {
   data() {
     // Convert current date to days since epoch
     const thisDay = new Date();
-    const todayString = thisDay.toISOString().slice(0, 10);
+    const todayString = thisDay.toLocaleDateString('en-US', { 
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
     const epoch = new Date(2024, 0, 0);
     const daysSinceEpoch = Math.floor((thisDay - epoch) / (1000 * 60 * 60 * 24));
