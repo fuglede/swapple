@@ -196,6 +196,16 @@ export default {
         this.counter += 1;
       }
     },
+    checkFirstVisit() {
+      const hasVisited = localStorage.getItem('swappleHasVisited');
+      if (!hasVisited) {
+        this.showRules = true;
+        localStorage.setItem('swappleHasVisited', 'true');
+      }
+    }
+  },
+  mounted() {
+    this.checkFirstVisit();
   },
   data() {
     // Convert current date to days since epoch
