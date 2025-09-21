@@ -10,11 +10,6 @@
         <span class="stat-number">{{ counter }}</span>
         <span class="stat-label">Moves</span>
       </div>
-      <div v-if="hasWon" class="message success">
-        <strong>YOU WON!</strong>
-        <span v-if="counter > optimal" class="hint">Can you find a solution<br/>with fewer moves?</span>
-        <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
-      </div>
       <div class="button-container">
         <button class="actionbutton" @click="undo" title="Undo last move" aria-label="Undo last move">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -28,6 +23,17 @@
           </svg>
           <span class="button-label">Reset</span>
         </button>
+      </div>
+    </div>
+
+    <div v-if="hasWon" class="modal-overlay" @click="closeModal">
+      <div class="modal" @click.stop>
+        <button class="close-button" @click="closeModal">×</button>
+        <div class="message success">
+          <strong>YOU WON!</strong>
+          <span v-if="counter > optimal" class="hint">There is a solution that uses fewer moves.<br />Can you find it?</span>
+          <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
+        </div>
       </div>
     </div>
 
@@ -75,6 +81,9 @@ export default {
     msg: String
   },
   methods: {
+    closeModal() {
+      this.hasWon = false;
+    },
     reset() {
       this.state = [[true, false, false, false], [false, true, false, false], [false, false, true, false], [false, false, false, true]];
       this.moves = [];
@@ -270,6 +279,7 @@ h1 {
   text-align: center;
   padding: 16px;
   border-radius: 8px;
+  min-width: 200px;
 }
 
 .success {
@@ -391,5 +401,56 @@ h3 {
 button:active {
   transform: scale(0.9);
   transition-duration: 50ms;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  animation: modal-appear 0.3s ease;
+  position: relative;
+}
+
+@keyframes modal-appear {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px 10px;
+}
+
+.close-button:hover {
+  color: #000;
+  background: none;
 }
 </style>
