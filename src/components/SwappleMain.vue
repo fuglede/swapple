@@ -3,6 +3,7 @@
     <header>
       <h1>SWAPPLE</h1>
       <div class="date-label">{{ date }}</div>
+      <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
     </header>
 
     <div class="stats-container">
@@ -34,6 +35,31 @@
           <span v-if="counter > optimal" class="hint">There is a solution that uses fewer moves.<br />Can you find it?</span>
           <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
           <button class="copy-button" @click="copyResults">Share results</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showRules" class="modal-overlay" @click="showRules = false">
+      <div class="modal rules-modal" @click.stop>
+        <button class="close-button" @click="showRules = false">×</button>
+        <h2>How to play</h2>
+        <div class="rules-content">
+          <p>Transform the starting pattern into the target pattern using row and column moves.</p>
+          <ol>
+            <li>Click on a row or column arrow to select it.</li>
+            <li>Click on another row or column to make a move.</li>
+          </ol>
+          <p>When you move a row, all of the cells in the row/column you selected first will be moved into the other one.</p>
+          <p>When moving a white cell, the target cell does not change. If you move a red cell into a white cell it becomes red. If you move a red cell into a red cell it becomes white!</p>
+          <p>In other “words”,</p>
+          <ul>
+            <li>⬜ + ⬜ = ⬜</li>
+            <li>⬜ + 🟥 = 🟥</li>
+            <li>🟥 + ⬜ = 🟥</li>
+            <li>🟥 + 🟥 = ⬜</li>
+          </ul>
+
+          Try to reach the target pattern in as few moves as possible!
         </div>
       </div>
     </div>
@@ -193,6 +219,7 @@ export default {
       activeRow: null,
       activeColumn: null,
       hasWon: false,
+      showRules: false,
       optimal: dists[puzzleIndex],
       date: todayString,
 
@@ -234,6 +261,7 @@ header {
   padding-bottom: 16px;
   margin-bottom: 24px;
   text-align: center;
+  position: relative;
 }
 
 h1 {
@@ -463,5 +491,47 @@ button:active {
 
 .copy-button:hover {
   background: #45a049;
+}
+
+.help-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(240, 100%, 90%);
+  color: #303030;
+}
+
+.rules-modal {
+  max-width: 600px;
+  width: 90%;
+}
+
+.rules-modal h2 {
+  margin-top: 0;
+  color: #202020;
+}
+
+.rules-content {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #404040;
+  text-align: left;
+}
+
+.rules-content ol {
+  padding-left: 20px;
+  margin-top: 12px;
+}
+
+.rules-content li {
+  margin-bottom: 8px;
 }
 </style>
