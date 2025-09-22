@@ -33,7 +33,7 @@
         <div class="message success">
           <strong>YOU WON!</strong>
           <span v-if="counter > optimal" class="hint">There is a solution that uses fewer moves.<br />Can you find it?</span>
-          <span v-else-if="counter == optimal" class="perfect">Perfect score!</span>
+          <span v-else-if="counter == optimal" class="perfect">And that's a perfect score!<br />No solution with fewer moves exist!</span>
           <button class="copy-button" @click="copyResults">Share results</button>
         </div>
       </div>
@@ -342,7 +342,6 @@ h1 {
   font-size: 16px;
   margin-top: 4px;
   color: #1a651a;
-  font-weight: bold;
 }
 
 .button-container {
