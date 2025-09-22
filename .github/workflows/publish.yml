@@ -27,6 +27,7 @@ jobs:
           git rm -r *
           cp -r ../dist/* .
           touch .nojekyll
+          echo 'swapple.fuglede.dk' > CNAME
           git config --local user.email "github@fuglede.dk"
           git config --local user.name "Søren Fuglede Jørgensen"
           git add .
