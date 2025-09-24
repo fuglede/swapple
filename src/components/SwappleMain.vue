@@ -139,7 +139,6 @@ export default {
         return
       }
       const move = this.moves.pop();
-      console.log(move);
       if (move.type === "row") {
         const activeRow = move.activeRow;
         const index = move.index
@@ -158,7 +157,6 @@ export default {
       this.activeRow = null;
     },
     rowClick(index) {
-      console.log(index)
       if (this.activeColumn !== null) {
         this.activeColumn = null;
       }
