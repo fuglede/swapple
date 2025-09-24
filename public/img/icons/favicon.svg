@@ -1,15 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 64 64"
+   width="64"
+   height="64"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="14.09375"
+     inkscape:cx="32"
+     inkscape:cy="32"
+     inkscape:window-width="1920"
+     inkscape:window-height="1147"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
   <!-- background -->
-  <rect width="64" height="64" rx="10" fill="#171523"/>
-
+  <rect
+     width="64"
+     height="64"
+     rx="10"
+     fill="#171523"
+     id="rect1" />
   <!-- horizontal wire -->
-  <line x1="16" y1="32" x2="48" y2="32" stroke="#6ef3a5" stroke-width="4" stroke-linecap="round"/>
-
+  <line
+     x1="13.374722"
+     y1="32"
+     x2="45.374722"
+     y2="32"
+     stroke="#6ef3a5"
+     stroke-width="4"
+     stroke-linecap="round"
+     id="line1" />
   <!-- control dot -->
-  <circle cx="16" cy="32" r="6" fill="#6ef3a5"/>
-
+  <circle
+     cx="13.374722"
+     cy="32"
+     r="6"
+     fill="#6ef3a5"
+     id="circle1" />
   <!-- target: circled plus -->
-  <circle cx="48" cy="32" r="10" fill="#171523" stroke="#6ef3a5" stroke-width="4"/>
-  <line x1="48" y1="24" x2="48" y2="40" stroke="#6ef3a5" stroke-width="3" stroke-linecap="round"/>
-  <line x1="40" y1="32" x2="56" y2="32" stroke="#6ef3a5" stroke-width="3" stroke-linecap="round"/>
+  <circle
+     cx="45.374722"
+     cy="32"
+     r="10"
+     fill="#171523"
+     stroke="#6ef3a5"
+     stroke-width="4"
+     id="circle2" />
+  <line
+     x1="45.374722"
+     y1="24"
+     x2="45.374722"
+     y2="40"
+     stroke="#6ef3a5"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line2" />
+  <line
+     x1="37.374722"
+     y1="32"
+     x2="53.374722"
+     y2="32"
+     stroke="#6ef3a5"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line3" />
 </svg>
