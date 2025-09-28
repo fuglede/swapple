@@ -3,7 +3,10 @@
     <header>
       <h1>SWAPPLE</h1>
       <div class="date-label">{{ date }}</div>
-      <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
+      <div class="header-buttons">
+        <button class="info-button" @click="showInfo = true" title="About the game" aria-label="About the game">ℹ</button>
+        <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
+      </div>
     </header>
 
     <div class="stats-container">
@@ -60,6 +63,26 @@
           </ul>
 
           Try to reach the target pattern in as few moves as possible!
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showInfo" class="modal-overlay" @click="showInfo = false">
+      <div class="modal info-modal" @click.stop>
+        <button class="close-button" @click="showInfo = false">×</button>
+        <h2>About Swapple</h2>
+        <div class="info-content">
+          <p>Swapple is a daily puzzle game where you transform patterns by swapping rows and columns. Each day brings a new challenge!</p>
+          <p>
+            The game is inspired by the synthesis of linear reversible circuits; a problem in reversible and quantum computation. Here, the
+            goal is to construct a target operation, the target pattern in Swapple, using a sequence of simpler operations, specifically
+            controlled NOT (CNOT) gates, which flip the state of a target bit if and only if a control bit is set. In Swapple, each row and
+            column operation corresponds to applying a CNOT gate. Your task is to find a sequence of these gates, i.e. a circuit, that
+            transform the initial configuration, corresponding to an empty circuit, into the target configuration. Moreover, finding one of
+            the shortest sequences of moves to achieve this goal corresponds to finding one of the most efficient circuits that implements the desired
+            operation.
+          </p>
+          <p>Created by Søren Fuglede Jørgensen. Find the source code or drop requests on <a href="https://github.com/fuglede/swapple">GitHub</a>.</p>
         </div>
       </div>
     </div>
@@ -228,6 +251,7 @@ export default {
       activeColumn: null,
       hasWon: false,
       showRules: false,
+      showInfo: false,
       optimal: dists[puzzleIndex],
       date: todayString,
 
@@ -557,5 +581,48 @@ button:active {
 .red-cell {
   background-color: hsl(0, 100%, 90%);
   border: 1px solid hsl(0, 100%, 80%);
+}
+
+.header-buttons {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.help-button, .info-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(240, 100%, 90%);
+  color: #303030;
+  position: static;
+}
+
+.info-modal {
+  max-width: 500px;
+  width: 90%;
+}
+
+.info-content {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #404040;
+  text-align: left;
+}
+
+.info-content a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.info-content a:hover {
+  text-decoration: underline;
 }
 </style>
