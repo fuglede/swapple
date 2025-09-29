@@ -216,8 +216,16 @@ export default {
       if (this.activeRow === null) {
         this.activeRow = index;
       } else {
+        const oldValues = [...this.state[index]];
         for (let i = 0; i < this.state.length; i++) {
           this.state[index][i] ^= this.state[this.activeRow][i];
+          // Add animation class to changed cells; check difference as ints
+          if (oldValues[i] != this.state[index][i]) {
+            console.log("row changed cell", index, i, oldValues[i], this.state[index][i]);
+            const cell = document.querySelector(`.cell-${index}-${i} > div > div`);
+            cell.classList.add('cell-changed');
+            setTimeout(() => cell.classList.remove('cell-changed'), 500);
+          }
         }
         this.moves.push({type: "row", activeRow: this.activeRow, index: index})
         this.activeRow = null;
@@ -235,8 +243,15 @@ export default {
       if (this.activeColumn === null) {
         this.activeColumn = index;
       } else {
+        const oldValues = this.state.map(row => row[index]);
         for (let i = 0; i < this.state.length; i++) {
           this.state[i][index] ^= this.state[i][this.activeColumn];
+          // Add animation class to changed cells
+          if (oldValues[i] != this.state[i][index]) {
+            const cell = document.querySelector(`.cell-${i}-${index} > div > div`);
+            cell.classList.add('cell-changed');
+            setTimeout(() => cell.classList.remove('cell-changed'), 500);
+          }
         }
         this.moves.push({type: "column", activeColumn: this.activeColumn, index: index})
         this.activeColumn = null;
@@ -867,5 +882,15 @@ button:active {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.cell-changed {
+  animation: cell-pop 0.5s ease;
+}
+
+@keyframes cell-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 </style>
