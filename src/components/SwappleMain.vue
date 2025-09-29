@@ -49,10 +49,10 @@
         <div class="rules-content">
           <p>Transform the starting pattern into the target pattern using row and column combinations.</p>
           <ol>
-            <li>Click on a row or column arrow to select it.</li>
-            <li>Click on another row or column to combine them.</li>
+            <li>Click on a row arrow to select a row.</li>
+            <li>Click on another row arrow to combine the two rows.</li>
           </ol>
-          <p>When you combine rows/columns, the second one you click gets updated by its cells with the first one you clicked.</p>
+          <p>When you combine two rows, the second one you click gets updated by combining its cells with the first one you clicked. The first row is unchanged.</p>
           <p>For each cell, the combination rule is the following:</p>
           <ul>
             <li><span class="white-cell"></span> + <span class="white-cell"></span> = <span class="white-cell"></span></li>
@@ -60,8 +60,9 @@
             <li><span class="red-cell"></span> + <span class="white-cell"></span> = <span class="red-cell"></span></li>
             <li><span class="red-cell"></span> + <span class="red-cell"></span> = <span class="white-cell"></span></li>
           </ul>
+          <p>You can also combine columns with columns, but you can not combine rows with columns.</p>
 
-          Try to reach the target pattern in as few moves as possible!
+          <p>Try to reach the target pattern in as few moves as possible!</p>
         </div>
       </div>
     </div>
