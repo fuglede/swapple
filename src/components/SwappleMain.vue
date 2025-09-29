@@ -89,7 +89,20 @@
 
     <div class="fieldcontainer" :style="{'grid-template-columns': 'repeat(' + (state.length + 1) + ', 1fr)'}">
       <template v-for="(row, rowIndex) in state" :key="rowIndex">
-        <div :style="{'grid-column': 1, 'grid-row': rowIndex + 1}">
+        <div :style="{'grid-column': 1, 'grid-row': rowIndex + 1}"
+             draggable="true"
+             :data-row="rowIndex"
+             @dragstart="dragStart($event, 'row', rowIndex)"
+             @dragend="dragend"
+             @dragenter="dragenter($event, 'row', rowIndex)"
+             @dragleave="dragleave"
+             @dragover="dragover"
+             @drop="drop($event, 'row', rowIndex)"
+             @touchstart="touchStart($event, 'row', rowIndex)"
+             @touchmove.prevent="touchMove($event)"
+             @touchend="touchEnd($event, 'row', rowIndex)"
+             @touchcancel="touchcancel"
+             class="draggable-container">
           <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">
             <span v-if="activeRow === rowIndex">×</span>
             <span v-else-if="activeRow !== null">⊕</span>
@@ -105,7 +118,20 @@
         </template>
       </template>
       <template v-for="(col2, index) in state[0]" :key="index">
-        <div :style="{'grid-column': index + 2, 'grid-row': state.length + 1 }">
+        <div :style="{'grid-column': index + 2, 'grid-row': state.length + 1 }"
+             draggable="true"
+             :data-column="index"
+             @dragstart="dragStart($event, 'column', index)"
+             @dragend="dragend"
+             @dragenter="dragenter($event, 'column', index)"
+             @dragleave="dragleave"
+             @dragover="dragover"
+             @drop="drop($event, 'column', index)"
+             @touchstart="touchStart($event, 'column', index)"
+             @touchmove.prevent="touchMove($event)"
+             @touchend="touchEnd($event, 'column', index)"
+             @touchcancel="touchcancel"
+             class="draggable-container">
           <button @click="columnClick(index)" :disabled="activeRow !== null">
             <span v-if="activeColumn === index">×</span>
             <span v-else-if="activeColumn !== null">⊕</span>
@@ -223,13 +249,198 @@ export default {
         this.showRules = true;
         localStorage.setItem('swappleHasVisited', 'true');
       }
+    },
+    dragStart(event, type, index) {
+      // Disable drag and drop on Firefox
+      if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        event.preventDefault();
+        return;
+      }
+      
+      // Firefox requires dataTransfer data and effectAllowed to be set
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', index.toString());
+      
+      // Delay adding classes to next tick for Firefox
+      setTimeout(() => {
+        this.dragStarted = true;
+        this.isDragging = true;
+        this.dragType = type;
+        this.dragIndex = index;
+        
+        const draggableElement = event.target;
+        draggableElement.classList.add('dragging');
+        
+        const validTargets = document.querySelectorAll(`[data-${type}]`);
+        validTargets.forEach(target => {
+          if (target.getAttribute(`data-${type}`) !== index.toString()) {
+            target.classList.add('droppable-target');
+          }
+        });
+      }, 0);
+    },
+    highlightValidTargets(type, index) {
+      const validTargets = document.querySelectorAll(`[data-${type}]`);
+      validTargets.forEach(target => {
+        if (target.getAttribute(`data-${type}`) !== index.toString()) {
+          target.classList.add('droppable-target');
+        }
+      });
+    },
+    clearHighlights() {
+      const highlights = document.querySelectorAll('.droppable-target, .droppable-target-hover, .dragging');
+      highlights.forEach(el => {
+        el.classList.remove('droppable-target', 'droppable-target-hover', 'dragging');
+      });
+    },
+    dragenter(event, type, index) {
+      // Prevent default to allow drop
+      event.preventDefault();
+      
+      if (!this.isDragging || this.dragType !== type || this.dragIndex === index) return;
+      
+      // Remove highlight from other elements
+      const highlights = document.querySelectorAll('.droppable-target-hover');
+      highlights.forEach(el => el.classList.remove('droppable-target-hover'));
+      
+      event.currentTarget.classList.add('droppable-target-hover');
+    },
+    dragover(event) {
+      // Required for Firefox
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+    },
+    dragleave(event) {
+      // Only remove if we're not entering a child element
+      if (!event.relatedTarget || !event.currentTarget.contains(event.relatedTarget)) {
+        event.currentTarget.classList.remove('droppable-target-hover');
+      }
+    },
+    drop(event, type, index) {
+      const draggingElements = document.querySelectorAll('.dragging');
+      draggingElements.forEach(el => el.classList.remove('dragging'));
+      
+      const validTargets = document.querySelectorAll('.droppable-target, .droppable-target-hover');
+      validTargets.forEach(target => {
+        target.classList.remove('droppable-target');
+        target.classList.remove('droppable-target-hover');
+      });
+      
+      this.isDragging = false;
+      if (this.dragType === type && this.dragIndex !== index) {
+        if (type === 'row') {
+          this.rowClick(this.dragIndex);
+          this.rowClick(index);
+        } else if (type === 'column') {
+          this.columnClick(this.dragIndex);
+          this.columnClick(index);
+        }
+      }
+    },
+    dragend() {
+      this.dragStarted = false;
+      this.isDragging = false;
+      this.clearHighlights();
+    },
+    touchStart(event, type, index) {
+      this.touchStartX = event.touches[0].clientX;
+      this.touchStartY = event.touches[0].clientY;
+      this.touchElement = event.target;
+      this.dragType = type;
+      this.dragIndex = index;
+      this.touchMoveCount = 0;
+      this.touchDragStarted = false;
+    },
+    touchMove(event) {
+
+      if (!this.touchElement) return;
+      
+      this.touchMoveCount++;
+      const touch = event.touches[0];
+      const moveX = touch.clientX - this.touchStartX;
+      const moveY = touch.clientY - this.touchStartY;
+      
+      // Only start drag if moved more than 10px and at least 2 move events
+      if (!this.touchDragStarted && (Math.abs(moveX) > 1 || Math.abs(moveY) > 1) && this.touchMoveCount > 1) {
+        this.touchDragStarted = true;
+        this.isDragging = true;
+        this.touchElement.classList.add('dragging');
+        this.highlightValidTargets(this.dragType, this.dragIndex);
+      }
+      
+      if (this.touchDragStarted) {
+        const currentTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (currentTarget && currentTarget.classList.contains('droppable-target')) {
+          const highlights = document.querySelectorAll('.droppable-target-hover');
+          highlights.forEach(el => el.classList.remove('droppable-target-hover'));
+          currentTarget.classList.add('droppable-target-hover');
+        }
+      }
+      
+      this.touchStartX = touch.clientX;
+      this.touchStartY = touch.clientY;
+    },
+    touchEnd(event, type, index) {
+      console.log(type); console.log(index);
+      if (!this.touchElement || !this.touchDragStarted) {
+        this.touchElement = null;
+        return;
+      }
+      
+      const touch = event.changedTouches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      
+      // Clean up ALL highlights first
+      const highlights = document.querySelectorAll('.droppable-target, .droppable-target-hover');
+      highlights.forEach(target => {
+        target.classList.remove('droppable-target');
+        target.classList.remove('droppable-target-hover');
+      });
+      
+      const dropTarget = elements.find(el => {
+        return el.hasAttribute(`data-${this.dragType}`) && 
+               el.getAttribute(`data-${this.dragType}`) !== this.dragIndex.toString();
+      });
+
+      if (dropTarget) {
+        const targetIndex = parseInt(dropTarget.getAttribute(`data-${this.dragType}`));
+        if (this.dragType === 'row') {
+          this.rowClick(this.dragIndex);
+          this.rowClick(targetIndex);
+        } else if (this.dragType === 'column') {
+          this.columnClick(this.dragIndex);
+          this.columnClick(targetIndex);
+        }
+      }
+
+      this.touchElement.classList.remove('dragging');
+      this.touchStartX = null;
+      this.touchStartY = null;
+      this.touchElement = null;
+      this.isDragging = false;
+      this.touchDragStarted = false;
+    },
+    touchcancel() {
+      if (!this.touchElement) return;
+      
+      const highlights = document.querySelectorAll('.droppable-target, .droppable-target-hover');
+      highlights.forEach(target => {
+        target.classList.remove('droppable-target');
+        target.classList.remove('droppable-target-hover');
+      });
+      
+      this.touchElement.classList.remove('dragging');
+      this.touchStartX = null;
+      this.touchStartY = null;
+      this.touchElement = null;
+      this.isDragging = false;
+      this.touchDragStarted = false;
     }
   },
   mounted() {
     this.checkFirstVisit();
   },
   data() {
-    // Convert current date to days since epoch
     const thisDay = new Date();
     const todayString = thisDay.toLocaleDateString('en-US', { 
       year: 'numeric',
@@ -257,6 +468,12 @@ export default {
 
       state: [[true, false, false, false], [false, true, false, false], [false, false, true, false], [false, false, false, true]],
       target: puzzles[puzzleIndex],
+      touchStartX: null,
+      touchStartY: null,
+      touchElement: null,
+      dragStarted: false,
+      touchDragStarted: false,
+      touchMoveCount: 0,
     }
   },
   watch: {
@@ -624,5 +841,33 @@ button:active {
 
 .info-content a:hover {
   text-decoration: underline;
+}
+
+.droppable-target {
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 2px dashed #4CAF50;
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+
+.droppable-target-hover {
+  background-color: rgba(0, 255, 0, 0.2);
+  border: 2px solid #4CAF50;
+  transform: scale(1.05);
+}
+
+.dragging {
+  opacity: 0.6;
+  cursor: move;
+  transform: scale(0.95);
+  transition: all 0.2s ease;
+  z-index: 1000;
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.draggable-container {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 </style>
