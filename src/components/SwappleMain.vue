@@ -47,14 +47,13 @@
         <button class="close-button" @click="showRules = false">×</button>
         <h2>How to play</h2>
         <div class="rules-content">
-          <p>Transform the starting pattern into the target pattern using row and column moves.</p>
+          <p>Transform the starting pattern into the target pattern using row and column combinations.</p>
           <ol>
             <li>Click on a row or column arrow to select it.</li>
-            <li>Click on another row or column to make a move.</li>
+            <li>Click on another row or column to combine them.</li>
           </ol>
-          <p>When you move a row, all of the cells in the row/column you selected first will be moved into the other one.</p>
-          <p>When moving a white cell, the target cell does not change. If you move a red cell into a white cell it becomes red. If you move a red cell into a red cell it becomes white!</p>
-          <p>In other “words”,</p>
+          <p>When you combine rows/columns, the second one you click gets updated by its cells with the first one you clicked.</p>
+          <p>For each cell, the combination rule is the following:</p>
           <ul>
             <li><span class="white-cell"></span> + <span class="white-cell"></span> = <span class="white-cell"></span></li>
             <li><span class="white-cell"></span> + <span class="red-cell"></span> = <span class="red-cell"></span></li>
