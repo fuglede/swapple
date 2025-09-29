@@ -487,12 +487,10 @@ export default {
         }
       }
       this.hasWon = true;
-      if (this.counter == this.optimal) {
-        const jsConfetti = new JSConfetti()
-        jsConfetti.addConfetti({
-          emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸'],
-        })
-      }
+      const jsConfetti = new JSConfetti()
+      jsConfetti.addConfetti({
+        emojis: ['🌈', '⚡️', '💥', '✨', '💫', '🌸'],
+      })
     }
   }
 }
