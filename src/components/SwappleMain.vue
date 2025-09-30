@@ -4,7 +4,7 @@
       <h1>SWAPPLE</h1>
       <div class="date-label">{{ date }}</div>
       <div class="header-buttons">
-        <button class="info-button" @click="showInfo = true" title="About the game" aria-label="About the game">ℹ</button>
+        <button class="info-button" @click="showInfo = true" title="About the game" aria-label="About the game">i</button>
         <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
       </div>
     </header>
@@ -801,7 +801,7 @@ button:active {
   background: #45a049;
 }
 
-.help-button {
+.help-button .info-button {
   position: absolute;
   right: 16px;
   top: 16px;
@@ -810,6 +810,7 @@ button:active {
   border-radius: 50%;
   font-size: 20px;
   font-weight: bold;
+  font-family: monospace;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -872,8 +873,9 @@ button:active {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
+  font-family: monospace;
   display: flex;
   align-items: center;
   justify-content: center;
