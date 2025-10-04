@@ -112,10 +112,10 @@
              @touchend="touchEnd($event)"
              @touchcancel="touchcancel"
              class="draggable-container">
-          <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">
-            <span v-if="activeRow === rowIndex">×</span>
-            <span v-else-if="activeRow !== null">⊕</span>
-            <span v-else>→</span>
+          <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null" :data-row="rowIndex">
+            <span v-if="activeRow === rowIndex && !touchDragStarted" :data-row="rowIndex">×</span>
+            <span v-else-if="activeRow !== null && !touchDragStarted" :data-row="rowIndex">⊕</span>
+            <span v-else :data-row="rowIndex">→</span>
           </button>
         </div>
         <template v-for="(col, colIndex) in row" :key="colIndex">
@@ -149,10 +149,10 @@
              @touchend="touchEnd($event)"
              @touchcancel="touchcancel"
              class="draggable-container">
-          <button @click="columnClick(index)" :disabled="activeRow !== null">
-            <span v-if="activeColumn === index">×</span>
-            <span v-else-if="activeColumn !== null">⊕</span>
-            <span v-else>↑</span>
+          <button @click="columnClick(index)" :disabled="activeRow !== null" :data-column="index">
+            <span v-if="activeColumn === index && !touchDragStarted" :data-column="index">×</span>
+            <span v-else-if="activeColumn !== null && !touchDragStarted" :data-column="index">⊕</span>
+            <span v-else :data-column="index">↑</span>
           </button>
         </div>
       </template>
@@ -303,6 +303,8 @@ export default {
       
       // Delay adding classes to next tick for Firefox
       setTimeout(() => {
+        if (this.activeRow !== null) this.activeRow = null;
+        if (this.activeColumn !== null) this.activeColumn = null;
         this.dragStarted = true;
         this.isDragging = true;
         this.dragType = type;
@@ -314,10 +316,12 @@ export default {
         const validTargets = document.querySelectorAll(`[data-${type}]`);
         validTargets.forEach(target => {
           if (target.getAttribute(`data-${type}`) !== index.toString()) {
-            target.classList.add('droppable-target');
+            if (target.tagName.toLowerCase() !== 'span')
+              target.classList.add('droppable-target');
           }
         });
         if (type === 'row') {
+          
           this.rowClick(this.dragIndex);
         } else if (type === 'column') {
           this.columnClick(this.dragIndex);
@@ -328,7 +332,8 @@ export default {
       const validTargets = document.querySelectorAll(`[data-${type}]`);
       validTargets.forEach(target => {
         if (target.getAttribute(`data-${type}`) !== index.toString()) {
-          target.classList.add('droppable-target');
+          if (target.tagName.toLowerCase() !== 'span')
+            target.classList.add('droppable-target');
         }
       });
     },
@@ -391,6 +396,8 @@ export default {
       this.clearHighlights();
     },
     touchStart(event, type, index) {
+      if (this.activeRow !== null || this.activeColumn !== null)
+        return;
       this.touchStartX = event.touches[0].clientX;
       this.touchStartY = event.touches[0].clientY;
       this.touchElement = event.target;
@@ -414,17 +421,29 @@ export default {
         this.isDragging = true;
         this.touchElement.classList.add('dragging');
         this.highlightValidTargets(this.dragType, this.dragIndex);
+        if (this.dragType === 'row') {
+          this.rowClick(this.dragIndex);
+        } else if (this.dragType === 'column') {
+          this.columnClick(this.dragIndex);
+        }
       }
       
       if (this.touchDragStarted) {
         const currentTarget = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (currentTarget && currentTarget.classList.contains('droppable-target')) {
+        const targetIndex = parseInt(currentTarget.getAttribute(`data-${this.dragType}`));
+        if (currentTarget && !isNaN(targetIndex)) { //currentTarget.classList.contains('droppable-target')) {
           const highlights = document.querySelectorAll('.droppable-target-hover');
           highlights.forEach(el => el.classList.remove('droppable-target-hover'));
-          currentTarget.classList.add('droppable-target-hover');
+          if (currentTarget.tagName.toLowerCase() === 'button')
+            currentTarget.parentElement.classList.add('droppable-target-hover');
+          else if (currentTarget.tagName.toLowerCase() === 'span')
+            currentTarget.parentElement.parentElement.classList.add('droppable-target-hover');
+          else {
+            currentTarget.classList.add('droppable-target-hover');
+          }
           
           // Set hover index for highlighting
-          const targetIndex = parseInt(currentTarget.getAttribute(`data-${this.dragType}`));
+          
           if (!isNaN(targetIndex)) {
             this.dragHoverIndex = targetIndex;
           }
@@ -453,17 +472,14 @@ export default {
       });
       
       const dropTarget = elements.find(el => {
-        return el.hasAttribute(`data-${this.dragType}`) && 
-               el.getAttribute(`data-${this.dragType}`) !== this.dragIndex.toString();
+        return el.hasAttribute(`data-${this.dragType}`);
       });
 
       if (dropTarget) {
         const targetIndex = parseInt(dropTarget.getAttribute(`data-${this.dragType}`));
         if (this.dragType === 'row') {
-          this.rowClick(this.dragIndex);
           this.rowClick(targetIndex);
         } else if (this.dragType === 'column') {
-          this.columnClick(this.dragIndex);
           this.columnClick(targetIndex);
         }
       }
