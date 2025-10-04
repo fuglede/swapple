@@ -122,7 +122,15 @@
         </div>
         <template v-for="(col, colIndex) in row" :key="colIndex">
           <div :class="`cell-${rowIndex}-${colIndex}`" :style="{'grid-column': colIndex + 2, 'grid-row': rowIndex + 1}">
-            <div :style="[colIndex == activeColumn || rowIndex == activeRow ? {backgroundColor: 'hsl(120, 100%, 90%)'} : {backgroundColor: '#eeeeee'}]">
+            <div :style="[
+              (dragType === 'column' && colIndex == activeColumn) ? {backgroundColor: 'hsl(120, 100%, 90%)'} :
+              (dragType === 'row' && rowIndex == activeRow) ? {backgroundColor: 'hsl(120, 100%, 90%)'} :
+              (dragType === 'column' && colIndex == dragHoverIndex) ? {backgroundColor: 'hsla(200, 100%, 85%, 60%)'} :
+              (dragType === 'row' && rowIndex == dragHoverIndex) ? {backgroundColor: 'hsla(200, 100%, 85%, 60%)'} :
+              colIndex == activeColumn ? {backgroundColor: 'hsl(120, 100%, 90%)'} :
+              rowIndex == activeRow ? {backgroundColor: 'hsl(120, 100%, 90%)'} :
+              {backgroundColor: '#eeeeee'}
+            ]">
               <div style="padding: 20%" :style="[col ? {backgroundColor: 'hsl(0, 100%, 90%)'} : {backgroundColor: 'white'}]"></div>
             </div>
           </div>
@@ -344,6 +352,9 @@ export default {
       highlights.forEach(el => el.classList.remove('droppable-target-hover'));
       
       event.currentTarget.classList.add('droppable-target-hover');
+      
+      // Set hover index to highlight the target row/column
+      this.dragHoverIndex = index;
     },
     dragover(event) {
       // Required for Firefox
@@ -354,6 +365,7 @@ export default {
       // Only remove if we're not entering a child element
       if (!event.relatedTarget || !event.currentTarget.contains(event.relatedTarget)) {
         event.currentTarget.classList.remove('droppable-target-hover');
+        this.dragHoverIndex = null;
       }
     },
     drop(event, type, index) {
@@ -378,6 +390,7 @@ export default {
     dragend() {
       this.dragStarted = false;
       this.isDragging = false;
+      this.dragHoverIndex = null;
       this.clearHighlights();
     },
     touchStart(event, type, index) {
@@ -412,6 +425,14 @@ export default {
           const highlights = document.querySelectorAll('.droppable-target-hover');
           highlights.forEach(el => el.classList.remove('droppable-target-hover'));
           currentTarget.classList.add('droppable-target-hover');
+          
+          // Set hover index for highlighting
+          const targetIndex = parseInt(currentTarget.getAttribute(`data-${this.dragType}`));
+          if (!isNaN(targetIndex)) {
+            this.dragHoverIndex = targetIndex;
+          }
+        } else {
+          this.dragHoverIndex = null;
         }
       }
       
@@ -457,6 +478,7 @@ export default {
       this.touchElement = null;
       this.isDragging = false;
       this.touchDragStarted = false;
+      this.dragHoverIndex = null;
     },
     touchcancel() {
       if (!this.touchElement) return;
@@ -473,6 +495,7 @@ export default {
       this.touchElement = null;
       this.isDragging = false;
       this.touchDragStarted = false;
+      this.dragHoverIndex = null;
     }
   },
   mounted() {
@@ -512,6 +535,7 @@ export default {
       dragStarted: false,
       touchDragStarted: false,
       touchMoveCount: 0,
+      dragHoverIndex: null,
     }
   },
   watch: {
@@ -809,7 +833,7 @@ button:active {
   cursor: pointer;
 }
 
-.copy-button:hover {
+copy-button:hover {
   background: #45a049;
 }
 
