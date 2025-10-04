@@ -3,10 +3,8 @@
     <header>
       <h1>SWAPPLE</h1>
       <div class="date-label">{{ date }}</div>
-      <div class="header-buttons">
-        <button class="info-button" @click="showInfo = true" title="About the game" aria-label="About the game">i</button>
-        <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
-      </div>
+      <button class="info-button" @click="showInfo = true" title="About the game" aria-label="About the game">i</button>
+      <button class="help-button" @click="showRules = true" title="Show rules" aria-label="Show rules">?</button>
     </header>
 
     <div class="stats-container">
@@ -896,15 +894,10 @@ copy-button:hover {
   border: 1px solid hsl(0, 100%, 80%);
 }
 
-.header-buttons {
+.info-button {
   position: absolute;
-  right: 16px;
+  left: 16px;
   top: 16px;
-  display: flex;
-  gap: 8px;
-}
-
-.help-button, .info-button {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -916,7 +909,23 @@ copy-button:hover {
   justify-content: center;
   background: hsl(240, 100%, 90%);
   color: #303030;
-  position: static;
+}
+
+.help-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(240, 100%, 90%);
+  color: #303030;
 }
 
 .info-modal {
