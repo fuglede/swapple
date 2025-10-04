@@ -536,6 +536,7 @@ export default {
       touchDragStarted: false,
       touchMoveCount: 0,
       dragHoverIndex: null,
+      dragType: null
     }
   },
   watch: {
