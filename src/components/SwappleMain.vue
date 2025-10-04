@@ -779,6 +779,7 @@ button:active {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 16px;
 }
 
 .modal {
@@ -788,6 +789,8 @@ button:active {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
   font-size: 16px;
   max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   animation: modal-appear 0.3s ease;
   position: relative;
 }
