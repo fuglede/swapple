@@ -312,6 +312,11 @@ export default {
             target.classList.add('droppable-target');
           }
         });
+        if (type === 'row') {
+          this.rowClick(this.dragIndex);
+        } else if (type === 'column') {
+          this.columnClick(this.dragIndex);
+        }
       }, 0);
     },
     highlightValidTargets(type, index) {
@@ -362,12 +367,10 @@ export default {
       });
       
       this.isDragging = false;
-      if (this.dragType === type && this.dragIndex !== index) {
+      if (this.dragType === type) {
         if (type === 'row') {
-          this.rowClick(this.dragIndex);
           this.rowClick(index);
         } else if (type === 'column') {
-          this.columnClick(this.dragIndex);
           this.columnClick(index);
         }
       }
