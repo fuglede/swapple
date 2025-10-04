@@ -111,7 +111,7 @@
              @drop="drop($event, 'row', rowIndex)"
              @touchstart="touchStart($event, 'row', rowIndex)"
              @touchmove.prevent="touchMove($event)"
-             @touchend="touchEnd($event, 'row', rowIndex)"
+             @touchend="touchEnd($event)"
              @touchcancel="touchcancel"
              class="draggable-container">
           <button @click="rowClick(rowIndex)" :disabled="activeColumn !== null">
@@ -148,7 +148,7 @@
              @drop="drop($event, 'column', index)"
              @touchstart="touchStart($event, 'column', index)"
              @touchmove.prevent="touchMove($event)"
-             @touchend="touchEnd($event, 'column', index)"
+             @touchend="touchEnd($event)"
              @touchcancel="touchcancel"
              class="draggable-container">
           <button @click="columnClick(index)" :disabled="activeRow !== null">
@@ -249,7 +249,6 @@ export default {
           this.state[index][i] ^= this.state[this.activeRow][i];
           // Add animation class to changed cells; check difference as ints
           if (oldValues[i] != this.state[index][i]) {
-            console.log("row changed cell", index, i, oldValues[i], this.state[index][i]);
             const cell = document.querySelector(`.cell-${index}-${i} > div > div`);
             cell.classList.add('cell-changed');
             setTimeout(() => cell.classList.remove('cell-changed'), 500);
@@ -439,8 +438,7 @@ export default {
       this.touchStartX = touch.clientX;
       this.touchStartY = touch.clientY;
     },
-    touchEnd(event, type, index) {
-      console.log(type); console.log(index);
+    touchEnd(event) {
       if (!this.touchElement || !this.touchDragStarted) {
         this.touchElement = null;
         return;
