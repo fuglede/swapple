@@ -840,7 +840,7 @@ copy-button:hover {
 .help-button .info-button {
   position: absolute;
   right: 16px;
-  top: 16px;
+  top: 8px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -900,7 +900,7 @@ copy-button:hover {
 .info-button {
   position: absolute;
   left: 16px;
-  top: 16px;
+  top: 8px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -917,7 +917,7 @@ copy-button:hover {
 .help-button {
   position: absolute;
   right: 16px;
-  top: 16px;
+  top: 8px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
