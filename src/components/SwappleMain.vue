@@ -482,6 +482,13 @@ export default {
         } else if (this.dragType === 'column') {
           this.columnClick(targetIndex);
         }
+      } else {
+        // Cancel the action if dropped outside a valid target
+        if (this.dragType === 'row') {
+          this.activeRow = null;
+        } else if (this.dragType === 'column') {
+          this.activeColumn = null;
+        }
       }
 
       this.touchElement.classList.remove('dragging');
